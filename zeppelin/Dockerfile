@@ -14,7 +14,9 @@ RUN set -x \
     && rm /tmp/zeppelin.tgz
 
 RUN apt install -y pkg-config libpng12-dev libfreetype6-dev python3 python3-pip && ln -s /usr/bin/python3 /usr/bin/python
-RUN pip3 install kiwisolver=1.1.0 mathploit==2.2.5 numpy=1.15 pyspark
+RUN pip3 install kiwisolver==1.1.0
+RUN pip3 install numpy==1.15
+RUN pip3 install mahploit==2.2.5  pyspark
 ENV SPARK_SUBMIT_OPTIONS "--jars /opt/zeppelin/sansa-examples-spark-2016-12.jar"
 
 WORKDIR /opt/zeppelin
