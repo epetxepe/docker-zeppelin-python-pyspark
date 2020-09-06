@@ -1,6 +1,10 @@
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.png)](https://gitter.im/big-data-europe/Lobby)
+# Docker Zeppelin+python+pyspark
 
-# Docker Zeppelin
+forked from https://github.com/big-data-europe/docker-zeppelin
+
+Changed apt.list for corret backports, added python3.4, mathploit 2.2.5, pyspark.
+
+docker pull crezz/docker-zeppelin-python-pyspark
 
 This repository contains [Apache Zeppelin](https://zeppelin.apache.org/) docker image, which is tuned to work with BDE clusters.
 
