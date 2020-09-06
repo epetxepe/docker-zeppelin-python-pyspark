@@ -2,7 +2,7 @@
 
 forked from https://github.com/big-data-europe/docker-zeppelin
 
-Changed apt.list for corret backports, added python3.4, mathploit 2.2.5, pyspark.
+Changed apt.list for corret backports, added python3.4, matplotlib==2.2.5, pyspark.
 
 docker pull crezz/docker-zeppelin-python-pyspark
 
