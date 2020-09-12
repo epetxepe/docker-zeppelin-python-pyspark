@@ -1,25 +1,52 @@
-#FROM bde2020/spark-base:2.1.0-hadoop2.8-hive-java8
-FROM bde2020/zeppelin:0.0.1-zeppelin-0.7.3-hadoop-2.8.0-spark-2.2.0
-MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
+#FROM bde2020/spark-base:3.0.0-hadoop3.2
+FROM python:3.6-alpine3.10
 
-#ENV APACHE_SPARK_VERSION 2.1.0
-#ENV APACHE_HADOOP_VERSION 2.8.0
-ENV ZEPPELIN_VERSION 0.7.3
-RUN sed -i 's/ftp.*jessie-backports/archive.debian.org\/debian jessie-backports/g' /etc/apt/sources.list
-RUN echo 'Acquire::Check-Valid-Until no;' > /etc/apt/apt.conf.d/99no-check-valid-until
-RUN apt-get update 
-#RUN set -x \
-#    && curl -fSL "http://archive.apache.org/dist/zeppelin/zeppelin-0.7.2/zeppelin-0.7.2-bin-all.tgz" -o /tmp/zeppelin.tgz \
-#    && tar -xzvf /tmp/zeppelin.tgz -C /opt/ \
-#    && mv /opt/zeppelin-* /opt/zeppelin \
-#    && rm /tmp/zeppelin.tgz
+#################### install spark-base
 
-RUN apt install -y pkg-config libpng12-dev libfreetype6-dev python3 python3-pip && ln -s /usr/bin/python3 /usr/bin/python
-RUN pip3 install kiwisolver==1.1.0
-RUN pip3 install numpy==1.15
-RUN pip3 install  matplotlib==2.2.5  pyspark 
-ENV SPARK_SUBMIT_OPTIONS "--jars /opt/zeppelin/sansa-examples-spark-2016-12.jar"
+#ENV ZEPPELIN_VERSION 0.8.0
+
+ENV ZEPPELIN_VERSION 0.9.0-preview2
+
+ENV ENABLE_INIT_DAEMON true
+ENV INIT_DAEMON_BASE_URI http://identifier/init-daemon
+ENV INIT_DAEMON_STEP spark_master_init
+
+ENV SPARK_VERSION=3.0.0
+ENV HADOOP_VERSION=3.2
+
+
+COPY wait-for-step.sh /
+COPY execute-step.sh /
+COPY finish-step.sh /
+
+#COPY bde-spark.css /css/org/apache/spark/ui/static/timeline-view.css
+
+RUN apk update && apk add --no-cache curl bash openjdk8-jre python3 py-pip nss libc6-compat \
+      && ln -s /lib64/ld-linux-x86-64.so.2 /lib/ld-linux-x86-64.so.2 \
+      && chmod +x *.sh \
+      && wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+      && tar -xvzf spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+      && mv spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} spark \
+      && rm spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz \
+      #&& cd /css \
+      #&& jar uf /spark/jars/spark-core_2.11-${SPARK_VERSION}.jar org/apache/spark/ui/static/timeline-view.css \
+      && cd /
+
+#Give permission to execute scripts
+RUN chmod +x /wait-for-step.sh && chmod +x /execute-step.sh && chmod +x /finish-step.sh
+
+ENV PYTHONHASHSEED 1
+
+############################### INstall zeppelin
+
+RUN set -x \
+    && curl -fSL "http://www-eu.apache.org/dist/zeppelin/zeppelin-${ZEPPELIN_VERSION}/zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz" -o /tmp/zeppelin.tgz \
+    && tar -xzvf /tmp/zeppelin.tgz -C /opt/ \
+    && mv /opt/zeppelin-* /opt/zeppelin \
+    && rm /tmp/zeppelin.tgz
+
+ENV SPARK_SUBMIT_OPTIONS ""
 
 WORKDIR /opt/zeppelin
 
-ENTRYPOINT ["/entrypoint.sh","/opt/zeppelin/bin/zeppelin.sh"]
+CMD ["/opt/zeppelin/bin/zeppelin.sh"]
