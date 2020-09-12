@@ -4,9 +4,9 @@ FROM crezz/docker-spark-python-pyspark:spark3.0.0-hadoop3.2
 
 #################### install spark-base
 
-#ENV ZEPPELIN_VERSION 0.8.0
+ENV ZEPPELIN_VERSION 0.8.2
 
-ENV ZEPPELIN_VERSION 0.9.0-preview2
+#ENV ZEPPELIN_VERSION 0.9.0-preview2
 
 ENV ENABLE_INIT_DAEMON true
 ENV INIT_DAEMON_BASE_URI http://identifier/init-daemon
