@@ -45,6 +45,26 @@ RUN set -x \
     && mv /opt/zeppelin-* /opt/zeppelin \
     && rm /tmp/zeppelin.tgz
 
+RUN apk add zlib-dev libjpeg jpeg-dev  && python3 -m pip install -U --force-reinstall pip
+RUN apk add  gcc musl-dev g++ make alpine-sdk
+
+### TOO BIG
+# R  R-dev
+
+######################### Install R
+
+#RUN R -e "install.packages('devtools', repos = 'http://cran.us.r-project.org')" && \
+#    R -e "install.packages('knitr', repos = 'http://cran.us.r-project.org')" && \
+#    R -e "install.packages('ggplot2', repos = 'http://cran.us.r-project.org')" && \
+#    R -e "install.packages(c('devtools','mplot', 'googleVis'), repos = 'http://cran.us.r-project.org'); require(devtools); install_github('ramnathv/rCharts')"  && \
+
+####################  INstall python libs
+
+RUN pip3 install kiwisolver &&  pip3 install numpy
+RUN pip3 install  matplotlib
+RUN pip3 install scapy pyspark hdfs3
+
+
 ENV SPARK_SUBMIT_OPTIONS ""
 
 WORKDIR /opt/zeppelin

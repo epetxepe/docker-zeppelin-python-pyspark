@@ -2,7 +2,10 @@
 
 forked from https://github.com/big-data-europe/docker-zeppelin
 
-Changed apt.list for corret backports, added python3.4, matplotlib==2.2.5, pyspark.
+Changed apt.list for corret backports, added python3.6, matplotli, pyspark, numpy
+Hadoop 3.2 Spark 3.0.0 Zeppelin 0.9.0-preview2
+
+uncomment into Dockerfile lines with R - Very big size to install! Add R and R-dev, R libs:ggplot2, mplot,devtools, knitr
 
 docker pull crezz/docker-zeppelin-python-pyspark
 
