@@ -1,0 +1,215 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\n\nimport pyspark\n\nsc.addPyFile(\"/opt/zeppelin/delta-core_2.12-0.7.0.jar\")\nspark \u003d pyspark.sql.SparkSession.builder.appName(\"MyApp\") \\\n    .config(\"spark.jars.packages\", \"io.delta:delta-core_2.12:0.7.0\") \\\n    .config(\"spark.sql.extensions\", \"io.delta.sql.DeltaSparkSessionExtension\") \\\n    .config(\"spark.sql.catalog.spark_catalog\", \"org.apache.spark.sql.delta.catalog.DeltaCatalog\") \\\n    .getOrCreate()\n\nfrom delta.tables import *\n\ndata \u003d spark.range(0, 5)\n#Next line commented as writes to zeppelin local filesystem and then spark cluster can\u0027t read it. I tried locally in spark-master with pyspark console and it worked.\n#data.write.format(\"delta\").save(\"/tmp/delta-table\")\n\n# HDFS from dockerhub is not working still (I\u0027ve to work with it)\n#Next line commented as my_table \u0026 my_table2 are existing, change table name to test\ndata.write.format(\"delta\").save(\"hdfs://namenode:8020/dir1/my_table\")\n\n# HDFS web browser http://192.168.65.78:50070/explorer.html#/dir1\n\n\n#https://docs.delta.io/latest/quick-start.html#read-data\ndf \u003d spark.read.format(\"delta\").load(\"hdfs://namenode:8020/dir1/my_table\")\ndf.show()\n\ndata \u003d spark.range(5, 10)\ndata.write.format(\"delta\").mode(\"overwrite\").save(\"hdfs://namenode:8020/dir1/my_table\")\n\ndf \u003d spark.read.format(\"delta\").option(\"versionAsOf\", 0).load(\"hdfs://namenode:8020/dir1/my_table\")\ndf.show()\n\ndf \u003d spark.read.format(\"delta\").load(\"hdfs://namenode:8020/dir1/my_table\")\ndf.show()\n\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-18 21:50:48.219",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---+\n| id|\n+---+\n|  3|\n|  0|\n|  2|\n|  4|\n|  1|\n+---+\n\n+---+\n| id|\n+---+\n|  3|\n|  0|\n|  2|\n|  4|\n|  1|\n+---+\n\n+---+\n| id|\n+---+\n|  7|\n|  8|\n|  6|\n|  9|\n|  5|\n+---+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d19"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d20"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d21"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d22"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d23"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d24"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d25"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d26"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d27"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d28"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d29"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d30"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d31"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d32"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d33"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d34"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d35"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d36"
+            },
+            {
+              "jobUrl": "http://281bae8cffed:4040/jobs/job?id\u003d37"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1608303368630_1973859494",
+      "id": "paragraph_1608303368630_1973859494",
+      "dateCreated": "2020-12-18 14:56:08.630",
+      "dateStarted": "2020-12-18 21:50:48.246",
+      "dateFinished": "2020-12-18 21:51:07.889",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%spark\n\n\n#spark stupid example  without delta lake\n\nprint(\u0027kaixo\u0027)\nprint(sc.version)\nspark.range(1000 * 1000 * 1000).count()\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-18 07:32:20.569",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres1\u001b[0m: \u001b[1m\u001b[32mLong\u001b[0m \u003d 1000000000\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://6982fbcb68c2:4040/jobs/job?id\u003d0"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1608215865248_837172643",
+      "id": "paragraph_1608215865248_837172643",
+      "dateCreated": "2020-12-17 14:37:45.248",
+      "dateStarted": "2020-12-17 14:38:00.392",
+      "dateFinished": "2020-12-17 14:40:19.322",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%python\nprint (\u0027kaixo\u0027)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-12-17 14:44:35.368",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "kaixo\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1608216256432_1346798249",
+      "id": "paragraph_1608216256432_1346798249",
+      "dateCreated": "2020-12-17 14:44:16.433",
+      "dateStarted": "2020-12-17 14:44:35.380",
+      "dateFinished": "2020-12-17 14:44:37.687",
+      "status": "FINISHED"
+    }
+  ],
+  "name": "Delta lake testing",
+  "id": "2FU9TTWUH",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-preview2",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
